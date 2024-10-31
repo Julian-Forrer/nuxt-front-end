@@ -1,0 +1,10 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+  .custom-box {
+    @apply w-fit mx-auto mt-8 text-center border-4 border-black bg-green-200 rounded-lg p-4;
+  }
+} */
