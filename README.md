@@ -1,3 +1,5 @@
+# this is a project made during my internship at Sharesquare, it isnt finished yet 
+
 # Nuxt 3 Minimal Starter
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
