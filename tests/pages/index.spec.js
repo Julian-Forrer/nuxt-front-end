@@ -1,65 +1,67 @@
 // tests/pages/index.spec.js
 import { mount, shallowMount } from '@vue/test-utils'
-import { describe, it, expect, vi } from 'vitest'; // Importeren van Vitest
+import { describe, it, expect, vi } from 'vitest'; // Importing vitest
 
-import Index from '/pages/index.vue' // Pas het pad aan op basis van de structuur van je project
+import Index from '/pages/index.vue'
+
+
 
 //below here is my first test, i test if i can find a sentence in my index page
 describe('Index Page', () => {
   it('renders the expected message', () => {
-    const wrapper = mount(Index) // De Index component wordt gemount
-    expect(wrapper.text()).toContain('this is my front end for the csv application') // Controleer of de verwachte zin aanwezig is
+    const wrapper = mount(Index) // mounting the index page
+    expect(wrapper.text()).toContain('this is my front end for the csv application') // expecting the senctence to be in the index.vue file
   })
 })
 
 
 describe('Index Page API call', () => {
   it('calls the API with the correct URL', async () => {
-    // Mock de $fetch functie
+    // Mocking the fetch function for a api call
     global.$fetch = vi.fn(() => Promise.resolve('Mocked response'))
 
-    // Mount de component
+    // Mounting the index component
     const wrapper = mount(Index)
 
-    // Stel de waarde van fileInput in
-    wrapper.vm.fileInput = { files: [new File(['dummy content'], 'example.csv')] } // Simuleer een bestand
+    
+    wrapper.vm.fileInput = { files: [new File(['dummy content'], 'example.csv')] } // Simulating a file called example.csv
 
-    // Roep de uploadCsv functie aan
+    // calling on the uploadCsv function
     await wrapper.vm.uploadCsv()
 
-    // Controleer of $fetch met de juiste URL is aangeroepen
+    // expect the fetch to call with the api url
     expect(global.$fetch).toHaveBeenCalledWith('http://localhost:8080/api/import-csv', expect.any(Object))
   })
 })
 
 
-
+// below here i use a stub, stubs are used to replace components that you dont want to render in your tests, i ran into some issuess calling the Nuxtlink on its 
+// own so i made a stub out of it
 describe('Index Page', () => {
   it('should find the NuxtLink to the data route and check its attributes', () => {
     const wrapper = mount(Index, {
       global: {
         stubs: {
           NuxtLink: {
-            template: '<a :href="to"><slot /></a>', // Mock NuxtLink met een :href attributen
-            props: ['to'] // Voeg props toe aan de mock
+            template: '<a :href="to"><slot /></a>', 
+            props: ['to'] 
           }
         }
       }
     })
 
-    // Zoek naar het list item met de NuxtLink naar /data
-    const dataLinkItem = wrapper.find('li.li:nth-child(2)') // Dit pakt de tweede <li>, die naar /data verwijst
+    const dataLinkItem = wrapper.find('li.li:nth-child(2)') // here i will find the second list item because that is the route to the data page
     expect(dataLinkItem.exists()).toBe(true)
 
-    // Zoek de gemockte NuxtLink binnen het list item
-    const link = dataLinkItem.find('a') // Zoek naar de gemockte <a> tag
+  
+    const link = dataLinkItem.find('a') // finding the a tag
     expect(link.exists()).toBe(true)
 
-    // Controleer of de tekst van de link correct is
+    // Controlling if the text is data
     expect(link.text()).toBe('data')
 
-    // Controleer of de link naar de juiste pagina verwijst door het href attribuut te controleren
-    expect(link.attributes('href')).toBe('/data') // Hier controleren we het href attribuut
+    // controling the link to the data page
+    expect(link.attributes('href')).toBe('/data')
   })
 })
 
@@ -79,25 +81,3 @@ describe('Index Page', () => {
 
 
 
-// describe('Index Page API Call', () => {
-//   it('calls the API with the correct URL', async () => {
-//     // Mock de $fetch functie
-//     global.$fetch = vi.fn(() => Promise.resolve('File uploaded successfully'));
-
-//     // Mock de alert functie
-//     global.alert = vi.fn();
-
-//     // Mount de Index component
-//     const wrapper = mount(Index);
-
-//     // Roep de uploadCsv functie aan zonder een bestand te simuleren
-//     await wrapper.vm.uploadCsv();
-
-//     // Controleer of de $fetch functie is aangeroepen met de juiste URL en configuratie
-//     expect($fetch).toHaveBeenCalledTimes(1); // Controleer of $fetch één keer is aangeroepen
-//     expect($fetch).toHaveBeenCalledWith('http://localhost:8080/api/import-csv', {
-//       method: 'POST',
-//       body: expect.any(FormData), // Controleer dat er een FormData object is verzonden
-//     });
-//   });
-// });

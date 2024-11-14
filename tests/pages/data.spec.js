@@ -5,12 +5,16 @@ import { describe, it, expect, vi } from 'vitest';
 import data from '/pages/data.vue'
 
 
-
+// this test is to test the api with some mock data
 describe('Sharesquare Page', () => {
+
+  // the wrapper is made to mount the component with (sort of save it)
     let wrapper;
   
+    // before each and after each are "lifecycle hooks", they are used to setup and cleanup the resources used in the test  
     beforeEach(() => {
-      // Mock de fetch functie
+    
+    // below here i "mock" the fetch function, so each time i call it the mocked data will be used
       global.fetch = vi.fn(() =>
         Promise.resolve({
           ok: true,
@@ -28,27 +32,30 @@ describe('Sharesquare Page', () => {
     });
   
     afterEach(() => {
-      // Unmount de wrapper na elke test, alleen als het gedefinieerd is
+      // after each so that the wrapper will cleanup the test envirement
       if (wrapper) {
         wrapper.unmount();
       }
-      vi.restoreAllMocks(); // Herstel mocks naar hun originele staat
+      vi.restoreAllMocks(); 
     });
-  
+
+
+   // it is used to describe a particular test so here i test should display the mocked data in the table to test the table with some mocked data
     it('should display the mocked data in the table', async () => {
-      // Wacht op de DOM-update
+      
+      
+      
       await wrapper.vm.$nextTick();
   
-      // Zoek naar alle <tr> elementen in de tabel
+      // looking for al the table body rows 
       const dataRows = wrapper.findAll('tbody tr');
   
-      // Controleer of het juiste aantal rijen wordt weergegeven
-      expect(dataRows.length).toBe(3); // Verwacht dat er 3 rijen zijn
+      // expect the data to be 3 rows long
+      expect(dataRows.length).toBe(3); 
   
-      // Controleer de inhoud van de rijen
-      expect(dataRows[0].findAll('td')[1].text()).toContain('John');  // Eerste rij, tweede cel
-      expect(dataRows[1].findAll('td')[1].text()).toContain('Jane');  // Tweede rij, tweede cel
-      expect(dataRows[2].findAll('td')[1].text()).toContain('Jim');    // Derde rij, tweede cel
+      expect(dataRows[0].findAll('td')[1].text()).toContain('John');  
+      expect(dataRows[1].findAll('td')[1].text()).toContain('Jane');  
+      expect(dataRows[2].findAll('td')[1].text()).toContain('Jim');    
     });
 
 
